@@ -1,11 +1,27 @@
-import { Search, Bell, Heart, MessageSquare, PlusCircle, User } from 'lucide-react';
-import { useState } from 'react';
+import { Search, Bell, Heart, MessageSquare, PlusCircle, User, LogOut } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchDropdown from '../components/SearchDropdown';
-
+import ProfileDropdown from '../components/ProfileDropdown';
 const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+  useEffect(() => {
+    const loggedUser = localStorage.getItem('user');
+    if (loggedUser) {
+      setUser(JSON.parse(loggedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/');
+  };
+  
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -60,13 +76,33 @@ const Header = () => {
             >
               <Bell size={24} />
             </button>
-            <button 
-              onClick={() => navigate('/login')}
-              className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
-            >
-              <User size={24} />
-              Login/Register
-            </button>
+            {user ? (
+  <div className="relative">
+    <button 
+      onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+      className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
+    >
+      <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white">
+        {user.name.charAt(0)}
+      </div>
+      <span>{user.name}</span>
+    </button>
+    <ProfileDropdown 
+      isVisible={showProfileDropdown} 
+      onClose={() => setShowProfileDropdown(false)}
+      onLogout={handleLogout}
+    />
+  </div>
+) : (
+  <button 
+    onClick={() => navigate('/login')}
+    className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
+  >
+    <User size={24} />
+    Login/Register
+  </button>
+)}
+
           </div>
         </div>
       </div>

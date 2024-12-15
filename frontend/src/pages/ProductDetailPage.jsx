@@ -89,7 +89,7 @@ const ProductDetailPage = () => {
             <div className="border-t pt-4">
               <h2 className="font-semibold mb-4">Location</h2>
               <div className="h-64 bg-gray-200 rounded-lg">
-                {/* Integrate your map component here */}
+                {/*  map component here */}
                 <div className="w-full h-full rounded-lg overflow-hidden">
                   Map will be displayed here
                 </div>

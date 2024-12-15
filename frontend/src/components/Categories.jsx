@@ -16,7 +16,7 @@ const Categories = () => {
     ];
 
     return (
-        <div className="bg-gradient-to-b from-gray-50 to-white py-8">
+        <div className="bg-gradient-to-b from-gray-50 to-white ">
             <div className="sticky top-0 bg-white shadow-sm z-10">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-800">Browse Categories</h2>

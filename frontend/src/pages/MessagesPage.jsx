@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Send, Search, MoreVertical, Phone, Video, User } from 'lucide-react';
+import { Send, Search, MoreVertical, User, Ban, Flag, Trash2 } from 'lucide-react';
+
 
 const MessagesPage = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageInput, setMessageInput] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+
 
   const chats = [
     {
@@ -33,9 +36,28 @@ const MessagesPage = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!messageInput.trim()) return;
-
-    // Add message handling logic here
     setMessageInput('');
+  };
+
+  const dropdownOptions = [
+    { icon: <Ban size={16} />, label: 'Block User', action: () => handleBlockUser() },
+    { icon: <Flag size={16} />, label: 'Report User', action: () => handleReportUser() },
+    { icon: <Trash2 size={16} />, label: 'Delete Chat', action: () => handleDeleteChat() }
+  ];
+
+  const handleBlockUser = () => {
+    //  logic here
+    setShowDropdown(false);
+  };
+
+  const handleReportUser = () => {
+    //  logic here
+    setShowDropdown(false);
+  };
+
+  const handleDeleteChat = () => {
+    //  logic here
+    setShowDropdown(false);
   };
 
   return (
@@ -98,24 +120,36 @@ const MessagesPage = () => {
             <>
               {/* Chat Header */}
               <div className="p-4 border-b flex justify-between items-center bg-white shadow">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center shadow-md">
-                    <User size={20} className="text-gray-500" />
-                  </div>
-                  <h2 className="font-semibold text-gray-700">{selectedChat.name}</h2>
-                </div>
-                <div className="flex items-center gap-4">
-                  <button className="text-gray-500 hover:text-teal-600">
-                    <Phone size={20} />
-                  </button>
-                  <button className="text-gray-500 hover:text-teal-600">
-                    <Video size={20} />
-                  </button>
-                  <button className="text-gray-500 hover:text-teal-600">
-                    <MoreVertical size={20} />
-                  </button>
-                </div>
-              </div>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center shadow-md">
+            <User size={20} className="text-gray-500" />
+          </div>
+          <h2 className="font-semibold text-gray-700">{selectedChat?.name}</h2>
+        </div>
+        <div className="relative">
+          <button 
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <MoreVertical size={20} className="text-gray-500" />
+          </button>
+          
+          {showDropdown && (
+            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+              {dropdownOptions.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={option.action}
+                  className="w-full px-4 py-2 flex items-center gap-3 hover:bg-gray-50 text-gray-700"
+                >
+                  {option.icon}
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">

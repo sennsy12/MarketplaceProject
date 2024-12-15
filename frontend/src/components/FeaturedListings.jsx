@@ -55,7 +55,7 @@ const FeaturedListings = () => {
   };
 
   const addToFolder = (folderId) => {
-    // Add save to folder logic here
+    //  folder logic here
     setShowFolderModal(false);
   };
 
