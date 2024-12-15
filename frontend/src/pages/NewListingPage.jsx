@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Upload, MapPin, Plus, X, Camera, Package, DollarSign,Star } from 'lucide-react';
+import { Upload, MapPin, Plus, X, Camera, Package,Star } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 
 const NewListingPage = () => {
@@ -33,7 +33,7 @@ const NewListingPage = () => {
     const newImages = acceptedFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file),
-      isPrimary: images.length === 0 // First image is primary
+      isPrimary: images.length === 0 
     }));
     setImages(prev => [...prev, ...newImages]);
   }, [images]);
@@ -198,20 +198,20 @@ const NewListingPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="block font-medium">Price</label>
-              <div className="relative">
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 pl-8 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="0"
-                />
-                <DollarSign className="absolute left-2 top-2.5 text-gray-400" size={20} />
-                <span className="absolute right-4 top-2 text-gray-500">kr</span>
-              </div>
-            </div>
+  <label className="block font-medium">Price</label>
+  <div className="relative">
+    <span className="absolute left-4 top-2 text-gray-500">kr</span>
+    <input
+      type="number"
+      name="price"
+      value={formData.price}
+      onChange={handleInputChange}
+      className="w-full px-4 py-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+      placeholder="0"
+    />
+  </div>
+</div>
+
           </div>
         </section>
 
