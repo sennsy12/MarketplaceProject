@@ -18,6 +18,8 @@ import TermsPage from './pages/footer/TermsPage';
 import PrivacyPage from './pages/footer/PrivacyPage';
 import CookiePage from './pages/footer/CookiePage';
 import ContactPage from './pages/footer/ContactPage';
+import CategoryPage from './pages/CategoryPage';
+import SubCategoryPage from './pages/SubCategoryPage';
 const MainComponent = () => {
   return (
     <Router>
@@ -26,6 +28,8 @@ const MainComponent = () => {
         <main className="flex-grow ">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/category/:categoryId" element={<CategoryPage />} />
+  <Route path="/category/:categoryId/:subcategoryId" element={<SubCategoryPage />} />
             <Route path="/listing/:id" element={<ProductDetailPage />} />
             <Route path="/new-listing" element={<NewListingPage />} />
             <Route path="/messages" element={<MessagesPage />} />
