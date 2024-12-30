@@ -38,9 +38,9 @@ const FeaturedListings = ({ listings = [] }) => {
       
     return (
         <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {displayListings.map((listing) => (
-        <div 
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+                {displayListings.map((listing) => (
+                    <div 
                         key={listing.id}
                         className="bg-white rounded-lg shadow-md overflow-hidden group cursor-pointer"
                         onClick={() => navigate(`/listing/${listing.id}`)}
@@ -49,25 +49,27 @@ const FeaturedListings = ({ listings = [] }) => {
                             <img 
                                 src={listing.image} 
                                 alt={listing.title}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                             <button 
-                                className={`absolute top-3 right-3 p-2 rounded-full bg-white shadow-md
+                                className={`absolute top-2 right-2 p-1.5 sm:p-2 rounded-full bg-white shadow-md
                                     ${listing.saved ? 'text-red-500' : 'text-gray-400'}`}
                                 onClick={(e) => handleSave(e, listing)}
                             >
-                                <Heart size={20} fill={listing.saved ? "currentColor" : "none"} />
+                                <Heart size={16} fill={listing.saved ? "currentColor" : "none"} />
                             </button>
                         </div>
                         
-                        <div className="p-4">
-                            <h3 className="font-semibold text-lg group-hover:text-teal-600 transition-colors">
+                        <div className="p-2 sm:p-4">
+                            <h3 className="font-semibold text-sm sm:text-lg line-clamp-2 group-hover:text-teal-600 transition-colors">
                                 {listing.title}
                             </h3>
-                            <p className="text-teal-600 font-bold mt-2">{listing.price} {listing.currency}</p>
-                            <div className="flex items-center gap-1 mt-2 text-gray-500">
-                                <MapPin size={16} />
-                                <span className="text-sm">{listing.location}</span>
+                            <p className="text-teal-600 font-bold text-sm sm:text-base mt-1 sm:mt-2">
+                                {listing.price} {listing.currency}
+                            </p>
+                            <div className="flex items-center gap-1 mt-1 sm:mt-2 text-gray-500">
+                                <MapPin size={14} />
+                                <span className="text-xs sm:text-sm">{listing.location}</span>
                             </div>
                         </div>
                     </div>

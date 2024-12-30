@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Send, Search, Image, Paperclip,UserX, Flag, Trash2, Trash, MoreVertical } from 'lucide-react';
+import { Send, Search, Image, Paperclip,UserX, Flag, Trash2, Trash, MoreVertical, File } from 'lucide-react';
 import { listings } from '../data/mockData';
 
 const MessagesPage = () => {
@@ -10,6 +10,7 @@ const MessagesPage = () => {
   const [chats, setChats] = useState([]);
   const messagesEndRef = useRef(null);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const [showUploadOptions, setShowUploadOptions] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -287,11 +288,42 @@ const MessagesPage = () => {
                 {/* Message Input */}
 <div className="p-4 border-t">
   <div className="flex items-center gap-2">
-    <button
-      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-      onClick={() => document.getElementById('imageUpload').click()}
-    >
-      <Image size={20} className="text-gray-500" />
+    {/* Combined upload button with dropdown */}
+    <div className="relative">
+      <button
+        onClick={() => setShowUploadOptions(!showUploadOptions)}
+        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+      >
+        <Paperclip size={20} className="text-gray-500" />
+      </button>
+      
+      {/* Upload options dropdown */}
+      {showUploadOptions && (
+        <div className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-lg border py-2 w-40">
+          <button
+            onClick={() => {
+              document.getElementById('imageUpload').click();
+              setShowUploadOptions(false);
+            }}
+            className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50"
+          >
+            <Image size={16} className="text-gray-500" />
+            <span className="text-sm">Upload Image</span>
+          </button>
+          <button
+            onClick={() => {
+              document.getElementById('fileUpload').click();
+              setShowUploadOptions(false);
+            }}
+            className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50"
+          >
+            <File size={16} className="text-gray-500" />
+            <span className="text-sm">Upload File</span>
+          </button>
+        </div>
+      )}
+      
+      {/* Hidden file inputs */}
       <input
         type="file"
         id="imageUpload"
@@ -299,31 +331,30 @@ const MessagesPage = () => {
         accept="image/*"
         onChange={(e) => handleImageUpload(e)}
       />
-    </button>
-    <button
-      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-      onClick={() => document.getElementById('fileUpload').click()}
-    >
-      <Paperclip size={20} className="text-gray-500" />
       <input
         type="file"
         id="fileUpload"
         hidden
         onChange={(e) => handleFileUpload(e)}
       />
-    </button>
-    <input
-      type="text"
-      value={messageInput}
-      onChange={(e) => setMessageInput(e.target.value)}
-      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-      placeholder="Type a message..."
-      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-    />
+    </div>
+
+    {/* Message input with mobile-friendly styles */}
+    <div className="flex-1 min-w-0"> {/* Added min-w-0 to prevent overflow */}
+      <input
+        type="text"
+        value={messageInput}
+        onChange={(e) => setMessageInput(e.target.value)}
+        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+        placeholder="Type a message..."
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+      />
+    </div>
+
     <button
       onClick={sendMessage}
       disabled={!messageInput.trim()}
-      className={`p-2 rounded-full transition-colors ${
+      className={`p-2 rounded-full transition-colors flex-shrink-0 ${
         messageInput.trim()
           ? 'bg-teal-600 text-white hover:bg-teal-700'
           : 'bg-gray-100 text-gray-400'

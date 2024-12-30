@@ -22,24 +22,26 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-4 px-4">
-      <div className="flex gap-8">
-        {/* Sidebar */}
-        <div className="w-64">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Sidebar - now responsive */}
+        <div className="w-full lg:w-64">
           <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 bg-teal-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
+            <div className="flex flex-row lg:flex-col items-center gap-4 lg:gap-0">
+              <div className="w-16 h-16 lg:w-20 lg:h-20 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl lg:text-2xl font-bold lg:mb-4">
                 {user.name.charAt(0)}
               </div>
-              <h2 className="text-xl font-bold">{user.name}</h2>
-              <p className="text-gray-500">{user.email}</p>
+              <div className="lg:text-center">
+                <h2 className="text-xl font-bold">{user.name}</h2>
+                <p className="text-gray-500">{user.email}</p>
+              </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-white rounded-lg shadow grid grid-cols-2 lg:grid-cols-1">
             {tabs.map((tab) => (
               <button
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
-                className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 ${
+                className={`px-4 py-3 flex items-center gap-3 hover:bg-gray-50 ${
                   location.pathname === tab.path ? 'text-teal-600 bg-gray-50' : 'text-gray-700'
                 }`}
               >
@@ -51,7 +53,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-white rounded-lg shadow p-6">
+        <div className="flex-1 bg-white rounded-lg shadow p-4 lg:p-6">
           {location.pathname === '/profile' && <ProfileInfo />}
           {location.pathname === '/profile/listings' && <ProfileListings />}
           {location.pathname === '/profile/favorites' && <ProfileFavorites />}

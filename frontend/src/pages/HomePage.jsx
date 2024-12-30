@@ -4,10 +4,10 @@ import { listings } from '../data/mockData';
 
 const HomePage = () => {
   // Get the first 20 listings for featured section
-  const featuredListings = listings.slice(0, 20);
+  const featuredListings = listings.slice(0, 12);
   
   // Get different 20 listings for recommended section
-  const recommendedListings = listings.slice(20, 40);
+  const recommendedListings = listings.slice(12, 24);
 
   return (
     <div className="min-h-screen flex flex-col">

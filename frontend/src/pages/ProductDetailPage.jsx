@@ -5,13 +5,17 @@ import { listings } from '../data/mockData';
 
 const ProductDetailPage = () => {
   const [isSaved, setIsSaved] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
   const [listing, setListing] = useState(null);
 
   useEffect(() => {
     const productListing = listings.find(item => item.id === parseInt(id));
-    setListing(productListing);
+    if (productListing) {
+      setListing(productListing);
+      setSelectedImage(0);
+    }
   }, [id]);
 
   const handleMessageClick = () => {
@@ -29,27 +33,55 @@ const ProductDetailPage = () => {
 
   if (!listing) return null;
 
+ 
+  const allImages = [listing.image, ...listing.images];
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div className="aspect-w-16 aspect-h-9">
+            {/* Main Image Display */}
+            <div className="aspect-w-16 aspect-h-9 relative">
               <img
-                src={listing.image}
+                src={allImages[selectedImage]}
                 alt={listing.title}
                 className="w-full h-[400px] object-cover rounded-lg"
               />
+              {/* Navigation Arrows */}
+              <div className="absolute inset-0 flex items-center justify-between p-4">
+                <button
+                  onClick={() => setSelectedImage((prev) => (prev > 0 ? prev - 1 : allImages.length - 1))}
+                  className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={() => setSelectedImage((prev) => (prev < allImages.length - 1 ? prev + 1 : 0))}
+                  className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition"
+                >
+                  →
+                </button>
+              </div>
             </div>
+
+            {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-2">
-              {listing.images.map((img, index) => (
-                <img
+              {allImages.map((img, index) => (
+                <button
                   key={index}
-                  src={img}
-                  alt={`${listing.title} view ${index + 1}`}
-                  className="w-full h-24 object-cover rounded-lg cursor-pointer"
-                />
+                  onClick={() => setSelectedImage(index)}
+                  className={`relative aspect-w-1 aspect-h-1 ${
+                    selectedImage === index ? 'ring-2 ring-teal-500' : ''
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`${listing.title} view ${index + 1}`}
+                    className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75 transition"
+                  />
+                </button>
               ))}
             </div>
           </div>

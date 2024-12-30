@@ -1,6 +1,6 @@
-import { Search, Bell, Heart, MessageSquare, PlusCircle, User, LogOut, Menu, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Search, Bell, Heart, MessageSquare, PlusCircle, User, LogOut, Menu, X, Package, Star, Settings, Plus, Home } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import SearchDropdown from '../components/SearchDropdown';
 import ProfileDropdown from '../components/ProfileDropdown';
 
@@ -11,12 +11,26 @@ const Header = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const loggedUser = localStorage.getItem('user');
     if (loggedUser) {
       setUser(JSON.parse(loggedUser));
     }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -26,64 +40,136 @@ const Header = () => {
   };
 
   const MobileMenu = () => (
-    <div className="fixed inset-0 bg-white z-50 lg:hidden">
+    <div ref={mobileMenuRef} className="absolute top-full left-0 w-full bg-white shadow-lg border-t lg:hidden">
       <div className="p-4">
-        <button onClick={() => setShowMobileMenu(false)} className="absolute top-4 right-4">
-          <X size={24} />
-        </button>
-        
-        <div className="mt-12 space-y-6">
-          <button 
-            onClick={() => navigate('/new-listing')}
-            className="w-full flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-3 rounded-lg"
-          >
-            <PlusCircle size={20} />
-            New Listing
-          </button>
-
-          <div className="space-y-4">
-            <button 
-              onClick={() => navigate('/favorites')}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
-            >
-              <Heart size={20} />
-              <span>Favorites</span>
-            </button>
-            
-            <button 
-              onClick={() => navigate('/messages')}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
-            >
-              <MessageSquare size={20} />
-              <span>Messages</span>
-            </button>
-            
-            <button 
-              onClick={() => navigate('/notifications')}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
-            >
-              <Bell size={20} />
-              <span>Notifications</span>
-            </button>
-          </div>
-
+        <div className="space-y-6">
           {user ? (
-            <div className="border-t pt-4">
+            <>
               <div className="flex items-center gap-3 px-4 py-3">
                 <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white">
                   {user.name.charAt(0)}
                 </div>
                 <div>
                   <div className="font-medium">{user.name}</div>
+                  <div className="text-sm text-gray-500">{user.email}</div>
+                </div>
+              </div>
+
+              <div className="border-t pt-2">
+                <div className="space-y-2">
                   <button 
-                    onClick={handleLogout}
-                    className="text-sm text-red-600"
+                    onClick={() => navigate('/favorites')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
                   >
-                    Sign out
+                    <div className="flex items-center gap-3">
+                      <Heart size={20} />
+                      <span>Favorites</span>
+                    </div>
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      2
+                    </span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => navigate('/messages')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <MessageSquare size={20} />
+                      <span>Messages</span>
+                    </div>
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      4
+                    </span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => navigate('/notifications')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Bell size={20} />
+                      <span>Notifications</span>
+                    </div>
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      3
+                    </span>
                   </button>
                 </div>
               </div>
-            </div>
+
+              <div className="border-t pt-2">
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => {
+                      navigate('/profile');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <User size={20} />
+                    <span>Profile</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => {
+                      navigate('/profile/listings');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <Package size={20} />
+                    <span>My Listings</span>
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      navigate('/profile/favorites');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <Heart size={20} />
+                    <span>Favorites</span>
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      navigate('/profile/reviews');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <Star size={20} />
+                    <span>Reviews</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => {
+                      navigate('/profile/settings');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <Settings size={20} />
+                    <span>Settings</span>
+                  </button>
+
+                  <div className="border-t mt-2 pt-2">
+                    <button 
+                      onClick={() => {
+                        handleLogout();
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-red-600"
+                    >
+                      <LogOut size={20} />
+                      <span>Sign out</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
             <button 
               onClick={() => navigate('/login')}
@@ -93,130 +179,347 @@ const Header = () => {
               <span>Login/Register</span>
             </button>
           )}
+
+          <div className="border-t pt-4">
+            <button 
+              onClick={() => navigate('/new-listing')}
+              className="w-full flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-3 rounded-lg"
+            >
+              <PlusCircle size={20} />
+              New Listing
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <button 
-              className="lg:hidden"
-              onClick={() => setShowMobileMenu(true)}
-            >
-              <Menu size={24} />
-            </button>
-            
-            <h1 
-              onClick={() => navigate('/')} 
-              className="text-xl lg:text-2xl font-bold text-teal-600 cursor-pointer"
-            >
-              MarketPlace
-            </h1>
-          </div>
-
-          <button 
-            onClick={() => setShowMobileSearch(true)}
-            className="lg:hidden"
-          >
-            <Search size={24} />
-          </button>
-          
-          <div className="hidden lg:flex items-center gap-8 flex-1">
-            <button 
-              onClick={() => navigate('/new-listing')}
-              className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
-            >
-              <PlusCircle size={20} />
-              <span>New Listing</span>
-            </button>
-            
-            <div className="relative flex-1 mx-12">
-              <input
-                type="text"
-                placeholder="Search..."
-                onFocus={() => setShowSearch(true)}
-                onBlur={() => setTimeout(() => setShowSearch(false), 200)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-              <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
-              <SearchDropdown isVisible={showSearch} />
+    <>
+      <header className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              
+              
+              <h1 
+                onClick={() => navigate('/')} 
+                className="text-xl lg:text-2xl font-bold text-teal-600 cursor-pointer"
+              >
+                MarketPlace
+              </h1>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <button 
-                onClick={() => navigate('/favorites')}
-                className="text-gray-600 hover:text-teal-600 relative"
+                onClick={() => setShowMobileSearch(true)}
+                className="lg:hidden"
               >
-                <Heart size={24} />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                <Search size={24} />
               </button>
               <button 
-                onClick={() => navigate('/messages')}
-                className="text-gray-600 hover:text-teal-600 relative"
+                className="lg:hidden"
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
               >
-                <MessageSquare size={24} />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
+                {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
               </button>
+            </div>
+            
+            <div className="hidden lg:flex items-center gap-8 flex-1">
               <button 
-                onClick={() => navigate('/notifications')}
-                className="text-gray-600 hover:text-teal-600"
+                onClick={() => navigate('/new-listing')}
+                className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
               >
-                <Bell size={24} />
+                <PlusCircle size={20} />
+                <span>New Listing</span>
               </button>
               
-              {user ? (
-                <div className="relative">
+              <div className="relative flex-1 mx-12">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  onFocus={() => setShowSearch(true)}
+                  onBlur={() => setTimeout(() => setShowSearch(false), 200)}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+                <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
+                <SearchDropdown isVisible={showSearch} />
+              </div>
+
+              <div className="flex items-center gap-6">
+                <button 
+                  onClick={() => navigate('/favorites')}
+                  className="text-gray-600 hover:text-teal-600 relative"
+                >
+                  <Heart size={24} />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                </button>
+                <button 
+                  onClick={() => navigate('/messages')}
+                  className="text-gray-600 hover:text-teal-600 relative"
+                >
+                  <MessageSquare size={24} />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
+                </button>
+                <button 
+                  onClick={() => navigate('/notifications')}
+                  className="text-gray-600 hover:text-teal-600"
+                >
+                  <Bell size={24} />
+                </button>
+                
+                {user ? (
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                      className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
+                    >
+                      <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white">
+                        {user.name.charAt(0)}
+                      </div>
+                      <span>{user.name}</span>
+                    </button>
+                    <ProfileDropdown 
+                      isVisible={showProfileDropdown} 
+                      onClose={() => setShowProfileDropdown(false)}
+                      onLogout={handleLogout}
+                    />
+                  </div>
+                ) : (
                   <button 
-                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    onClick={() => navigate('/login')}
                     className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
                   >
-                    <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white">
-                      {user.name.charAt(0)}
-                    </div>
-                    <span>{user.name}</span>
+                    <User size={24} />
+                    Login/Register
                   </button>
-                  <ProfileDropdown 
-                    isVisible={showProfileDropdown} 
-                    onClose={() => setShowProfileDropdown(false)}
-                    onLogout={handleLogout}
-                  />
-                </div>
-              ) : (
-                <button 
-                  onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700"
-                >
-                  <User size={24} />
-                  Login/Register
-                </button>
-              )}
+                )}
+              </div>
             </div>
           </div>
+        </div>
+      </header>
+
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50">
+        <div className="flex justify-around items-center h-16">
+          <Link 
+            to="/" 
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-teal-600"
+          >
+            <Home size={24} />
+            <span className="text-xs mt-1">Home</span>
+          </Link>
+
+          <Link 
+            to="/favorites" 
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-teal-600"
+          >
+            <Heart size={24} />
+            <span className="text-xs mt-1">Favorites</span>
+          </Link>
+
+          <Link 
+            to="/new-listing" 
+            className="flex flex-col items-center justify-center -mt-5"
+          >
+            <div className="bg-teal-600 text-white p-3 rounded-full shadow-lg">
+              <Plus size={24} />
+            </div>
+            <span className="text-xs mt-1">Sell</span>
+          </Link>
+
+          <Link 
+            to="/messages" 
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-teal-600 relative"
+          >
+            <MessageSquare size={24} />
+            <span className="text-xs mt-1">Messages</span>
+          </Link>
+
+          <button 
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-teal-600"
+          >
+            <User size={24} />
+            <span className="text-xs mt-1">Menu</span>
+          </button>
         </div>
       </div>
 
-      {showMobileMenu && <MobileMenu />}
+      <style jsx global>{`
+        @media (max-width: 1024px) {
+          main {
+            padding-bottom: 5rem !important;
+          }
+        }
+      `}</style>
 
-      {showMobileSearch && (
-        <div className="fixed inset-0 bg-white z-50 p-4">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setShowMobileSearch(false)}>
-              <X size={24} />
-            </button>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              autoFocus
-            />
+      {showMobileMenu && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-3/5 bg-white shadow-xl">
+            <div className="p-4">
+              <button 
+                onClick={() => setShowMobileMenu(false)}
+                className="absolute right-4 top-4"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="mt-8 space-y-6">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 px-4 py-3">
+                      <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white">
+                        {user.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-medium">{user.name}</div>
+                        <div className="text-sm text-gray-500">{user.email}</div>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-2">
+                      <div className="space-y-2">
+                        <button 
+                          onClick={() => {
+                            navigate('/favorites');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Heart size={20} />
+                            <span>Favorites</span>
+                          </div>
+                          <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            2
+                          </span>
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            navigate('/messages');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <div className="flex items-center gap-3">
+                            <MessageSquare size={20} />
+                            <span>Messages</span>
+                          </div>
+                          <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            4
+                          </span>
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            navigate('/notifications');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Bell size={20} />
+                            <span>Notifications</span>
+                          </div>
+                          <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            3
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-2">
+                      <div className="space-y-2">
+                        <button 
+                          onClick={() => {
+                            navigate('/profile');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <User size={20} />
+                          <span>Profile</span>
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            navigate('/profile/listings');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <Package size={20} />
+                          <span>My Listings</span>
+                        </button>
+
+                        <button 
+                          onClick={() => {
+                            navigate('/profile/favorites');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <Heart size={20} />
+                          <span>Favorites</span>
+                        </button>
+
+                        <button 
+                          onClick={() => {
+                            navigate('/profile/reviews');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <Star size={20} />
+                          <span>Reviews</span>
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            navigate('/profile/settings');
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                        >
+                          <Settings size={20} />
+                          <span>Settings</span>
+                        </button>
+
+                        <div className="border-t mt-2 pt-2">
+                          <button 
+                            onClick={() => {
+                              handleLogout();
+                              setShowMobileMenu(false);
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-red-600"
+                          >
+                            <LogOut size={20} />
+                            <span>Sign out</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      navigate('/login');
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <User size={20} />
+                    <span>Login/Register</span>
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };
 
