@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MapPin, User, Heart, MessageSquare, Clock } from 'lucide-react';
+import { MapPin, User, Heart, MessageSquare, Clock, TrendingUp } from 'lucide-react';
 import { listings } from '../data/mockData';
 
 const ProductDetailPage = () => {
@@ -9,6 +9,8 @@ const ProductDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [listing, setListing] = useState(null);
+  const [showPhone, setShowPhone] = useState(false);
+  const [isCurrentUserSeller] = useState(true);
 
   useEffect(() => {
     const productListing = listings.find(item => item.id === parseInt(id));
@@ -136,9 +138,26 @@ const ProductDetailPage = () => {
                 <MessageSquare size={20} />
                 Message Seller
               </button>
-              <button className="flex-1 border border-teal-600 text-teal-600 py-3 rounded-lg hover:bg-teal-50 transition">
-                Show Phone Number
-              </button>
+              <button 
+  onClick={() => setShowPhone(!showPhone)}
+  className="flex-1 border border-teal-600 text-teal-600 py-3 rounded-lg hover:bg-teal-50 transition relative overflow-hidden"
+>
+  <div 
+    className={`absolute inset-0 flex items-center justify-center transform transition-transform duration-300 ${
+      showPhone ? '-translate-y-full' : 'translate-y-0'
+    }`}
+  >
+    Show Phone Number
+  </div>
+  <div 
+    className={`absolute inset-0 flex items-center justify-center transform transition-transform duration-300 ${
+      showPhone ? 'translate-y-0' : 'translate-y-full'
+    }`}
+  >
+    {listing.seller.phone}
+  </div>
+</button>
+
             </div>
 
             <div className="border-t pt-4">
@@ -149,6 +168,16 @@ const ProductDetailPage = () => {
                 </div>
               </div>
             </div>
+
+            {isCurrentUserSeller && (
+              <button 
+                onClick={() => navigate(`/listing/${listing.id}/statistics`)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 mt-4 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors border border-teal-600"
+              >
+                <TrendingUp size={20} />
+                View Statistics
+              </button>
+            )}
           </div>
         </div>
       </main>

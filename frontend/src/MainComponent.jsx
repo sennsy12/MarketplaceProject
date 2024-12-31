@@ -20,6 +20,8 @@ import CookiePage from './pages/footer/CookiePage';
 import ContactPage from './pages/footer/ContactPage';
 import CategoryPage from './pages/CategoryPage';
 import SubCategoryPage from './pages/SubCategoryPage';
+import ListingStatisticsPage from './pages/ListingStatisticsPage';
+
 const MainComponent = () => {
   return (
     <Router>
@@ -31,6 +33,7 @@ const MainComponent = () => {
             <Route path="/category/:categoryId" element={<CategoryPage />} />
   <Route path="/category/:categoryId/:subcategoryId" element={<SubCategoryPage />} />
             <Route path="/listing/:id" element={<ProductDetailPage />} />
+            <Route path="/listing/:id/statistics" element={<ListingStatisticsPage />} />
             <Route path="/new-listing" element={<NewListingPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />

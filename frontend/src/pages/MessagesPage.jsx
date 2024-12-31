@@ -12,9 +12,7 @@ const MessagesPage = () => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [showUploadOptions, setShowUploadOptions] = useState(false);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+
 
   useEffect(() => {
     if (location.state) {
@@ -50,7 +48,6 @@ const MessagesPage = () => {
   }, [location.state]);
 
   useEffect(() => {
-    scrollToBottom();
   }, [selectedChat?.messages]);
 
   const sendMessage = () => {
